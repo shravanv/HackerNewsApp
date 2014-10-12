@@ -22,7 +22,7 @@
                 color: #828282;
             }
             .tempTrow{
-                height: 10px;
+                height: 17px;
             }
         </style>
         <script type="text/javascript" src="js/jquery-2.0.3.js"></script>
@@ -70,7 +70,7 @@
                 var numberTd = document.createElement("td");
                 var titleTd = document.createElement("td");
                 var title = document.createElement("a");
-                $(numberTd).html((gblRowCount+1)+". ").attr("align","right").attr("valign","top").appendTo(titleRow);
+                $(numberTd).html((gblRowCount+1)+". ").attr("align","right").attr("valign","top").addClass("title").appendTo(titleRow);
                 $(title).html(newsObj.title).attr("href",newsObj.url).addClass("titleLink");
                 $(titleTd).append(title).addClass("title").appendTo(titleRow);
                 var votesTd = document.createElement("td");
