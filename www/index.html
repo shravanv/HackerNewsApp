@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <!--<link rel="stylesheet" type="text/css" href="css/index.css" />-->
+        <title>Hacker News</title>
+        <style type="text/css">
+            .title{
+                font-family: Verdana, Geneva, sans-serif;
+                font-size: 10pt;
+                color: #828282;
+                text-decoration: none;
+            }
+            .titleLink{
+                color: #828282;
+                text-decoration: none;
+            }
+            .votes{
+                font-family: Verdana, Geneva, sans-serif;
+                font-size: 7pt;
+                color: #828282;
+            }
+            .tempTrow{
+                height: 5px;
+            }
+        </style>
+        <script type="text/javascript" src="js/jquery-2.0.3.js"></script>
+        <script type="text/javascript">
+            var topStoriesIds = [];
+            var topStories = [];
+            var gblRowCount = 0;
+            function getTopStoresIds(){
+                $.ajax({
+                   url: "https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty",
+                   type:"GET",
+                   success:function(resp){
+                        topStoriesIds = resp;
+                        if(topStoriesIds.length > 0){
+                           getStoriesContent();
+                        }else{
+                            console.log("No feed available at this moment");
+                        } 
+                   },
+                   error: function(resp){
+                        console.log("error: "+resp);
+                   }
+                }); 
+            }
+
+            function getStoriesContent(){
+                for(var i=0; i<topStoriesIds.length;i++){
+                    $.ajax({
+                       url: "https://hacker-news.firebaseio.com/v0/item/"+topStoriesIds[i]+".json?print=pretty",
+                       type:"GET",
+                       success:function(resp){
+                           topStories.push(resp);
+                           showNewsFeed(resp);
+                       },
+                       error: function(resp){
+                           console.log("error: "+resp);
+                       }
+                    });
+                }  
+            }
+
+            function showNewsFeed(newsObj){
+                var titleRow = document.createElement("tr");
+                var votesRow =  document.createElement("tr");
+                var numberTd = document.createElement("td");
+                var titleTd = document.createElement("td");
+                var title = document.createElement("a");
+                $(numberTd).html((gblRowCount+1)+". ").attr("align","right").attr("valign","top").appendTo(titleRow);
+                $(title).html(newsObj.title).attr("href",newsObj.url).addClass("titleLink");
+                $(titleTd).append(title).addClass("title").appendTo(titleRow);
+                var votesTd = document.createElement("td");
+                var tempTd = document.createElement("td");
+                $(tempTd).html("<td colspan='2'></td>").appendTo(votesRow);
+                var noOfComments="";
+                if(newsObj.kids){
+                    noOfComments = newsObj.kids.length+" comments";
+                }else{
+                    noOfComments="discuss"
+                }
+                var tdsHtml = "<span>"+newsObj.score+" points</span> by <a class='titleLink' href='https://news.ycombinator.com/user?id='"+newsObj.by+"'>"+newsObj.by+"</a>"+
+                 " | <a class='titleLink' href='https://news.ycombinator.com/item?id='"+newsObj.id+"'>"+noOfComments+"</a>";
+                $(votesTd).html(tdsHtml).addClass("votes").appendTo(votesRow);
+                var tempTrow = document.createElement("tr");
+                $(tempTrow).addClass("tempTrow");
+                $("#feedTable").append(titleRow).append(votesRow).append(tempTrow);
+                gblRowCount++;
+                if(newsObj.id == topStoriesIds[topStoriesIds.length-1]){
+                    $("#loading").hide();
+                    $("#feedTable").show();                
+                }
+            }
+            $(document).on("ready",function(){
+               $("#loading").show();
+               getTopStoresIds();
+            });
+        </script>
+    </head>
+    <body>
+        <div class="">
+            <h2  style="line-height: 12pt;height: 10px;">
+                <span><img src="imgs/y_logo.gif" width="18" height="18" style="border:1px #ffffff solid;"></img>
+                    <b style="font-family: Verdana, Geneva, sans-serif;font-size: 10pt;color: #222222;">Hacker News</b>
+                </span >
+            </h2>
+            
+        </div>
+        <div id="loading" style="display: none"><img src="imgs/loading.gif"></img></div>
+        <table id="feedTable" border="0" cellpadding="0" cellspacing="0" style="font-family: Verdana, Geneva, sans-serif;font-size: 10pt;color: #828282;background-color: rgb(246, 246, 239);display:none">
+            <tbody>
+                
+            </tbody>
+         </table>           
+    </body>
+</html>
