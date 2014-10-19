@@ -49,10 +49,10 @@
                 var newsItem = document.createElement("li");
                 var itemLink = document.createElement("a");
                 var title = document.createElement("h2");
-                $(title).html(newsObj.title);
+                $(title).html(newsObj.title).css("font-size","25pt");
                 var upvotes = document.createElement("p");
                 var strong = document.createElement("strong");
-                $(strong).html(newsObj.score+" by "+newsObj.by).appendTo(upvotes);
+                $(strong).html(newsObj.score+" by "+newsObj.by).css("font-size","23pt").appendTo(upvotes);
                 var noOfComments="";
                 if(newsObj.kids){
                     noOfComments = newsObj.kids.length+" comments";
@@ -60,7 +60,7 @@
                     noOfComments="0 comments";
                 }
                 var comments = document.createElement("p");
-                $(comments).html(noOfComments);  
+                $(comments).html(noOfComments).css("font-size","21pt");  
                 $(itemLink).attr("href",newsObj.url).addClass("ui-btn ui-btn-icon-right ui-icon-carat-r").append(title).append(upvotes).append(comments).appendTo(newsItem);
                 $(newsItem).addClass("newsItem").css("display","none");
                 $("#newsList").append(newsItem);
@@ -82,7 +82,7 @@
                     <h2  >
                         <span>
                             <img src="imgs/y_logo.gif"  style="border:1px #ffffff solid;"></img>
-                            <b style="font-family: Verdana, Geneva, sans-serif;font-size: 17pt;color: #222222;">Hacker News</b>
+                            <b style="font-family: Verdana, Geneva, sans-serif;font-size: 30pt;color: #222222;">Hacker News</b>
                         </span >
                     </h2>
             </li>
